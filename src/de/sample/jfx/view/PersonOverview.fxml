@@ -63,7 +63,7 @@
                     <buttons>
                       <Button fx:id="btnNew" mnemonicParsing="false" text="New" />
                         <Button fx:id="btnEdit" mnemonicParsing="false" text="Edit" />
-                        <Button fx:id="btnDelete" mnemonicParsing="false" text="Delete" />
+                        <Button fx:id="btnDelete" mnemonicParsing="false" onMouseClicked="#handleDeletePerson" text="Delete" />
                     </buttons>
                   </ButtonBar>
                </children>

@@ -43,51 +43,75 @@ public class Person {
         this.birthday = new SimpleObjectProperty<LocalDate>(LocalDate.of(1990, 1, 1));
     }
 
-	public StringProperty getFirstName() {
-		return firstName;
-	}
+    public String getFirstName() {
+        return firstName.get();
+    }
 
-	public void setFirstName(StringProperty firstName) {
-		this.firstName = firstName;
-	}
+    public void setFirstName(String firstName) {
+        this.firstName.set(firstName);
+    }
 
-	public StringProperty getLastName() {
-		return lastName;
-	}
+    public StringProperty firstNameProperty() {
+        return firstName;
+    }
 
-	public void setLastName(StringProperty lastName) {
-		this.lastName = lastName;
-	}
+    public String getLastName() {
+        return lastName.get();
+    }
 
-	public StringProperty getStreet() {
-		return street;
-	}
+    public void setLastName(String lastName) {
+        this.lastName.set(lastName);
+    }
 
-	public void setStreet(StringProperty street) {
-		this.street = street;
-	}
+    public StringProperty lastNameProperty() {
+        return lastName;
+    }
 
-	public IntegerProperty getPostalCode() {
-		return postalCode;
-	}
+    public String getStreet() {
+        return street.get();
+    }
 
-	public void setPostalCode(IntegerProperty postalCode) {
-		this.postalCode = postalCode;
-	}
+    public void setStreet(String street) {
+        this.street.set(street);
+    }
 
-	public StringProperty getCity() {
-		return city;
-	}
+    public StringProperty streetProperty() {
+        return street;
+    }
 
-	public void setCity(StringProperty city) {
-		this.city = city;
-	}
+    public int getPostalCode() {
+        return postalCode.get();
+    }
 
-	public ObjectProperty<LocalDate> getBirthday() {
-		return birthday;
-	}
+    public void setPostalCode(int postalCode) {
+        this.postalCode.set(postalCode);
+    }
 
-	public void setBirthday(ObjectProperty<LocalDate> birthday) {
-		this.birthday = birthday;
-	}
+    public IntegerProperty postalCodeProperty() {
+        return postalCode;
+    }
+
+    public String getCity() {
+        return city.get();
+    }
+
+    public void setCity(String city) {
+        this.city.set(city);
+    }
+
+    public StringProperty cityProperty() {
+        return city;
+    }
+
+    public LocalDate getBirthday() {
+        return birthday.get();
+    }
+
+    public void setBirthday(LocalDate birthday) {
+        this.birthday.set(birthday);
+    }
+
+    public ObjectProperty<LocalDate> birthdayProperty() {
+        return birthday;
+    }
 }
