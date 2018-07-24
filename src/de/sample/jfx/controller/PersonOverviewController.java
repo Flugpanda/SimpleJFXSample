@@ -18,7 +18,7 @@ import javafx.scene.control.TableView;
  */
 public class PersonOverviewController {
 
-	// register all the elements of the table
+	// register the elements of the table
 	@FXML
 	private TableView<Person> tblPersons;
 	@FXML
@@ -26,7 +26,7 @@ public class PersonOverviewController {
 	@FXML
 	private TableColumn<Person, String> columnLastName;
 
-	// register all the lables
+	// register all the labels
 	@FXML
 	private Label lblFirstNAme;
 	@FXML
@@ -59,6 +59,18 @@ public class PersonOverviewController {
 	}
 
 	/**
+	 * Is called by the main application to give a reference back to itself.
+	 * 
+	 * @param mainApp		The reference to the main JFX App
+	 */
+	public void setMainApp(MainApp mainApp) {
+		this.mainApp = mainApp;
+
+		// Add observable list data to the table
+		tblPersons.setItems(mainApp.getPersonData());
+	}
+	
+	/**
 	 * Initializes the controller class. This method is automatically called after
 	 * the fxml file has been loaded.
 	 */
@@ -79,21 +91,9 @@ public class PersonOverviewController {
 	}
 
 	/**
-	 * Is called by the main application to give a reference back to itself.
-	 * 
-	 * @param mainApp
-	 */
-	public void setMainApp(MainApp mainApp) {
-		this.mainApp = mainApp;
-
-		// Add observable list data to the table
-		tblPersons.setItems(mainApp.getPersonData());
-	}
-
-	/**
 	 * Display the details of the given Person
 	 * 
-	 * @param person
+	 * @param person	The person object
 	 */
 	private void showPersonDetails(Person person) {
 		if (person != null) {
@@ -101,7 +101,7 @@ public class PersonOverviewController {
 			lblCity.setText(person.getCity());
 			lblFirstNAme.setText(person.getFirstName());
 			lblLastName.setText(person.getLastName());
-			lblPostCode.setText(Integer.toString(person.getPostalCode()));
+			lblPostCode.setText(person.getPostalCode());
 			lblStreet.setText(person.getStreet());
 		} else {
 			lblBirthday.setText("");
@@ -120,6 +120,7 @@ public class PersonOverviewController {
 	private void handleDeletePerson() {
 		// get the index of the currently selected person from the list
 		int selectedIndex = tblPersons.getSelectionModel().getSelectedIndex();
+		// check if the selected value is valid
 		if (selectedIndex >= 0) {
 			// remove the person from the list
 			tblPersons.getItems().remove(selectedIndex);
@@ -136,5 +137,43 @@ public class PersonOverviewController {
 	        // show dialogue
 	        alert.showAndWait();
 		}
+	}
+	
+	/**
+	 * Called when the user clicks the new button. Opens a dialog to edit
+	 * details for a new person.
+	 */
+	@FXML
+	private void handleNewPerson() {
+	    Person tempPerson = new Person("John", "Dow");
+	    boolean okClicked = mainApp.showPersonEditDialog(tempPerson);
+	    if (okClicked) {
+	        mainApp.getPersonData().add(tempPerson);
+	    }
+	}
+
+	/**
+	 * Called when the user clicks the edit button. Opens a dialog to edit
+	 * details for the selected person.
+	 */
+	@FXML
+	private void handleEditPerson() {
+	    Person selectedPerson = tblPersons.getSelectionModel().getSelectedItem();
+	    if (selectedPerson != null) {
+	        boolean okClicked = mainApp.showPersonEditDialog(selectedPerson);
+	        if (okClicked) {
+	            showPersonDetails(selectedPerson);
+	        }
+
+	    } else {
+	        // Nothing selected.
+	        Alert alert = new Alert(AlertType.WARNING);
+	        alert.initOwner(mainApp.getPrimaryStage());
+	        alert.setTitle("No Selection");
+	        alert.setHeaderText("No Person Selected");
+	        alert.setContentText("Please select a person in the table.");
+
+	        alert.showAndWait();
+	    }
 	}
 }
