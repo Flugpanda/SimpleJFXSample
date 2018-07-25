@@ -154,7 +154,7 @@ public class PersonUpdateController {
 			person.setStreet(tfStreet.getText());
 			person.setPostalCode(tfPostCode.getText());
 			person.setCity(tfCity.getText());
-			person.setBirthday(LocalDate.parse(tfBirthday.getText(), DateTimeFormatter.ISO_LOCAL_DATE));
+			person.setBirthday(tfBirthday.getText());
 
 			saved = true;
 			dialogStage.close();
@@ -181,6 +181,6 @@ public class PersonUpdateController {
 		tfStreet.setText(person.getStreet());
 		tfCity.setText(person.getCity());
 		tfPostCode.setText(person.getPostalCode());
-		tfBirthday.setText(person.getBirthday().toString());
+		tfBirthday.setText(person.getBirthday());
 	}
 }

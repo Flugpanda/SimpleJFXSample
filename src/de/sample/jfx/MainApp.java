@@ -1,9 +1,13 @@
 package de.sample.jfx;
 
+import java.io.File;
 import java.io.IOException;
+import java.util.prefs.Preferences;
 
 import de.sample.jfx.controller.PersonOverviewController;
 import de.sample.jfx.controller.PersonUpdateController;
+import de.sample.jfx.controller.RootLayoutController;
+import de.sample.jfx.controller.XmlFileHandler;
 import de.sample.jfx.model.Person;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
@@ -30,6 +34,8 @@ public class MainApp extends Application {
     // Working with JavaFX view classes that need to be informed about any changes made to the list of persons.
     // Therefore a special observable JFX collection is used
     private ObservableList<Person> personData;
+    // XML handler for dealing with files
+    private XmlFileHandler fileHandler;
 
     /**
      * main method to start jfx application
@@ -46,7 +52,8 @@ public class MainApp extends Application {
     public void init() throws Exception {
     	super.init();
     	personData = FXCollections.observableArrayList();
-    	bootstrapData();
+    	fileHandler = new XmlFileHandler();
+//    	bootstrapData();
     }
     
     /**
@@ -79,10 +86,15 @@ public class MainApp extends Application {
             // Show the scene containing the root layout.
             Scene scene = new Scene(rootLayout);
             primaryStage.setScene(scene);
+
+            // Give the controller access to the main app.
+            RootLayoutController controller = loader.getController();
+            controller.setMainApp(this);
+
             primaryStage.show();
         } catch (IOException e) {
             e.printStackTrace();
-        }
+        }        
     }
 
     /**
@@ -162,7 +174,8 @@ public class MainApp extends Application {
 
     /**
      * Returns the main stage.
-     * @return
+     * 
+     * @return	the primary stage of the app
      */
     public Stage getPrimaryStage() {
         return primaryStage;
@@ -170,10 +183,58 @@ public class MainApp extends Application {
 
     /**
      * Return the list with the stored persons
-     * @return
+     * 
+     * @return	the obersable list with the persons
      */
 	public ObservableList<Person> getPersonData() {
 		return personData;
+	}
+	
+	/**
+	 * Returns the person file preference, i.e. the file that was last opened.
+	 * The preference is read from the OS specific registry. If no such
+	 * preference can be found, null is returned.
+	 * 
+	 * @return
+	 */
+	public File getPersonFilePath() {
+	    Preferences prefs = Preferences.userNodeForPackage(MainApp.class);
+	    String filePath = prefs.get("filePath", null);
+	    if (filePath != null) {
+	        return new File(filePath);
+	    } else {
+	        return null;
+	    }
+	}
+	
+	/**
+	 * Returns the file handler
+	 * 
+	 * @return
+	 */
+	public XmlFileHandler getXmlFileHandler() {
+		return fileHandler;
+	}
+
+	/**
+	 * Sets the file path of the currently loaded file. The path is persisted in
+	 * the OS specific registry.
+	 * 
+	 * @param file the file or null to remove the path
+	 */
+	public void setPersonFilePath(File file) {
+	    Preferences prefs = Preferences.userNodeForPackage(MainApp.class);
+	    if (file != null) {
+	        prefs.put("filePath", file.getPath());
+
+	        // Update the stage title.
+	        primaryStage.setTitle("AddressApp - " + file.getName());
+	    } else {
+	        prefs.remove("filePath");
+
+	        // Update the stage title.
+	        primaryStage.setTitle("AddressApp");
+	    }
 	}
 
 }
